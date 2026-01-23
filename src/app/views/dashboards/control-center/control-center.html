@@ -1,0 +1,58 @@
+<div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-end mb-4">
+  <app-page-breadcrumb
+    title="Control Center"
+    subTitle1="Insights"
+    subTitle2="Dashboards"
+  />
+
+  <!-- ✅ Sempre visibile, ma in colonna su mobile -->
+  <div class="ms-lg-auto d-flex flex-column flex-sm-row gap-3 mt-3 mt-lg-0 w-100 w-lg-auto">
+    <!-- EXPENSES -->
+    <div class="d-flex align-items-center">
+      <div class="d-inline-flex flex-column justify-content-center me-2">
+        <span class="fw-500 fs-xs d-block">
+          <small>EXPENSES</small>
+        </span>
+        <span class="fw-500 fs-xl d-block text-primary"> $47,000 </span>
+      </div>
+      <div class="d-none d-md-inline-flex">
+        <app-apexchart [getOptions]="expenseChartOptions" />
+      </div>
+    </div>
+
+    <!-- PROFIT -->
+    <div class="d-flex align-items-center border-start-0 border-sm-start border-top-0 border-bottom-0 border-end-0 ps-0 ps-sm-3 ms-0 ms-sm-3">
+      <div class="d-inline-flex flex-column justify-content-center me-2">
+        <span class="fw-500 fs-xs d-block">
+          <small>PROFIT</small>
+        </span>
+        <span class="fw-500 fs-xl d-block text-danger"> $38,500 </span>
+      </div>
+      <div class="d-none d-md-inline-flex">
+        <app-apexchart [getOptions]="profitChartOptions" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main-content mx-auto">
+  <div class="row g-3">
+    <!-- ✅ Sempre 100% su tutte le dimensioni -->
+    <div class="col-12">
+      <app-live-feeds />
+    </div>
+    
+    <!-- ✅ Mobile: 100%, Desktop (≥992px): 50% -->
+    <div class="col-12 col-lg-6">
+      <app-group-chat />
+      <app-calendar />
+    </div>
+    
+    <!-- ✅ Mobile: 100%, Desktop (≥992px): 50% -->
+    <div class="col-12 col-lg-6">
+      <app-global-view />
+      <app-subscriptions-hourly />
+      <app-session-scale />
+    </div>
+  </div>
+</div>
