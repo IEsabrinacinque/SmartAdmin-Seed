@@ -784,6 +784,9 @@ body.fullscreen-active {
 /********************************************* Rules BELOW this point are set all screens below 992px */
 @media only screen and (max-width: #{($mobile-breakpoint-size) - 0.02px}) {
 
+  .app-header {
+    z-index: calc(var(--z-index-master) + 3) !important;
+  }
   /* debug mode */
   .app-debug-mode {
     position: relative;
@@ -852,6 +855,9 @@ body.fullscreen-active {
   .app-mobile-menu-open {
     overflow: hidden;
     //padding-right: 12px;
+  }
+  .app-mobile-menu-open .dropdown-menu {
+    overflow: visible !important;
   }
 
   /* set font size and menu width */
@@ -1124,4 +1130,41 @@ body.fullscreen-active {
     grid-template-columns: none !important;
     grid-template-areas: none !important;
   }
+}
+
+@media (max-width: 991.98px) {
+  .dropdown-menu {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .app-content,
+  .content-wrapper {
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+
+  .app-header {
+    position: relative; // ancora il riferimento
+  }
+
+  .app-header .dropdown-menu {
+    position: fixed !important;
+    top: calc(var(--app-header-height) + 0.5rem);
+    right: var(--mobile-page-padding);
+    left: auto;
+    z-index: 99999 !important;
+  }
+}
+@media (max-width: 991.98px) {
+
+  .app-header .dropdown-menu {
+    transform: none !important;   // 🔥 BLOCCA POPPER
+    left: auto !important;
+    right: var(--mobile-page-padding) !important;
+  }
+
 }

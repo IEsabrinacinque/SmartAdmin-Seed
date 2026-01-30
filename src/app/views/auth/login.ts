@@ -1,81 +1,106 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '@/app/core/services/auth/auth.service';
+import { SessionService } from '@/app/core/services/session.service';
+
 
 @Component({
   selector: 'app-login',
-  imports: [
-    RouterLink
-  ],
+  standalone: true,
+  imports: [RouterLink, FormsModule, CommonModule],
   template: `
     <div class="row justify-content-center">
       <div class="col-11 col-md-8 col-lg-6 col-xl-4">
-        <div id="regular-login" class="login-card p-4 p-md-6 bg-dark bg-opacity-50 translucent-dark rounded-4">
+        <div class="login-card p-4 bg-dark bg-opacity-50 rounded-4">
           <h2 class="text-center mb-4">Login</h2>
-          <p class="text-center text-white opacity-50 mb-4">Keep it all together and you'll be free</p>
-          <form >
+
+          <form (ngSubmit)="login()">
             <div class="mb-3">
-              <label for="email" class="form-label">Email or Phone</label>
-              <input type="email" class="form-control form-control-lg text-white bg-dark border-light border-opacity-25 bg-opacity-25" id="email" required="">
+              <label class="form-label">Email</label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                [(ngModel)]="email"
+                name="email"
+                required
+              />
             </div>
+
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <div class="input-group">
-                <input type="password" class="form-control form-control-lg text-white bg-dark border-light border-opacity-25 bg-opacity-25" id="password" required="">
-              </div>
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control form-control-lg"
+                [(ngModel)]="password"
+                name="password"
+                required
+              />
             </div>
-            <div class="d-grid mb-3">
-              <button type="submit" class="btn btn-primary btn-lg bg-primary bg-opacity-75">Sign In</button>
-            </div>
-            <div class="text-center mb-4">
-              <a routerLink="/auth/forgot-password" class="text-decoration-none small text-white">Forgot Password?</a>
-            </div>
-            <div class="divider small text-white opacity-25">or</div>
-            <div class="d-grid mb-3">
-              <button type="button" id="switchToToken" class="btn btn-dark bg-opacity-50 border-dark btn-lg">
-                Login Using Token
-              </button>
-            </div>
-          </form>
-        </div>
-        <div id="token-login" class="login-card d-none p-4 p-md-6 bg-dark bg-opacity-50 translucent-dark rounded-4">
-          <h2 class="text-center mb-4">Login</h2>
-          <p class="text-center text-white opacity-50 mb-4">Keep it all together and you'll be free</p>
-          <form>
-            <div class="d-grid mb-3">
-              <button type="submit" class="btn btn-lg bg-opacity-75" style="--bs-btn-bg:#4285F4; --bs-btn-border-color:#4285F4; --bs-btn-color:#FFFFFF;
-                            --bs-btn-hover-bg:#357ae8; --bs-btn-hover-border-color:#357ae8; --bs-btn-hover-color:#FFFFFF;
-                            --bs-btn-active-bg:#3367d6; --bs-btn-active-border-color:#3367d6; --bs-btn-active-color:#FFFFFF;">
-                Sign In Using Google
-              </button>
-            </div>
-            <div class="d-grid mb-3">
-              <button type="submit" class="btn btn-lg bg-opacity-75" style="--bs-btn-bg:#0078D4; --bs-btn-border-color:#0078D4; --bs-btn-color:#FFFFFF;
-                            --bs-btn-hover-bg:#005A9E; --bs-btn-hover-border-color:#005A9E; --bs-btn-hover-color:#FFFFFF;
-                            --bs-btn-active-bg:#004377; --bs-btn-active-border-color:#004377; --bs-btn-active-color:#FFFFFF;">
-                Sign In Using Microsoft
-              </button>
-            </div>
-            <div class="d-grid mb-3">
-              <button type="submit" class="btn btn-lg bg-opacity-75" style="--bs-btn-bg:#D1D1D6; --bs-btn-border-color:#D1D1D6; --bs-btn-color:#000000;
-                            --bs-btn-hover-bg:#C7C7CC; --bs-btn-hover-border-color:#C7C7CC; --bs-btn-hover-color:#000000;
-                            --bs-btn-active-bg:#BABAC0; --bs-btn-active-border-color:#BABAC0; --bs-btn-active-color:#000000;">
-                Sign In Using Apple
-              </button>
-            </div>
-            <div class="divider small text-white opacity-25">or</div>
 
             <div class="d-grid mb-3">
-              <button type="button" id="switchToRegular" class="btn btn-dark bg-opacity-50 border-dark btn-lg">
-                Sign In Using Password
+              <button type="submit" class="btn btn-primary btn-lg">
+                Sign In
               </button>
+            </div>
+
+            <p *ngIf="errorMessage" class="text-danger text-center">
+              {{ errorMessage }}
+            </p>
+
+            <div class="text-center">
+              <a routerLink="/auth/forgot-password" class="small text-white">
+                Forgot Password?
+              </a>
             </div>
           </form>
         </div>
       </div>
     </div>
   `,
-  styles: ``
 })
 export class Login {
+  email = '';
+  password = '';
+  errorMessage: string | null = null;
 
+  constructor(
+    private authService: AuthService,
+    private session: SessionService,
+    private router: Router,
+  ) {}
+
+  login(): void {
+  this.errorMessage = null;
+
+  this.authService.login(this.email, this.password)
+    .subscribe(res => {
+
+      if (res.codErrore !== 0 || !res.dati) {
+        this.errorMessage = res.messaggio;
+        return;
+      }
+
+      // ✅ dati dal backend (mock)
+      const token = res.dati.token;
+      const menu = res.dati.menu;
+
+      // 🔧 per ora mock, poi arriverà dal backend
+      const role = 'ADMIN';
+      const tagCliente = window.location.host; 
+      // oppure DemoBroker / Multinsurance quando il backend lo manderà
+
+      // ✅ salva sessione globale
+      this.session.login(
+        token,
+        tagCliente,
+        role,
+        menu
+      );
+
+      // 🚀 redirect
+      this.router.navigate(['/myviews/dashboard']);
+    });
+}
 }

@@ -14,13 +14,13 @@ import {SimplebarAngularModule} from 'simplebar-angular';
         class="btn btn-system no-arrow"
         aria-label="Open Notifications"
       >
-        <span class="badge badge-icon pos-top pos-end">{{ allNotifications.length }}</span>
+        <span class="badge badge-icon pos-top">{{ allNotifications.length }}</span>
         <svg class="sa-icon sa-icon-2x">
           <use href="/assets/icons/sprite.svg#bell"></use>
         </svg>
       </button>
 
-      <div ngbDropdownMenu class="dropdown-menu-animated dropdown-xl dropdown-menu-end p-0">
+      <div ngbDropdownMenu class="dropdown-menu-animated dropdown-xl">
         <div class="notification-header rounded-top mb-2">
           <h4 class="m-0">
             {{ allNotifications.length }} New <small class="mb-0 opacity-80">User Notifications</small>

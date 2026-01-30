@@ -41,7 +41,7 @@ export class App implements AfterViewInit,OnInit {
       .subscribe(data => {
         if (data['title']) {
           this.titleService.setTitle(data['title'] +
-            ' | SmartAdmin - Angular Responsive Bootstrap 5 Admin Dashboard');
+            ' | NewPicass');
         }
       });
   }

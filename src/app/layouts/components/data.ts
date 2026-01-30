@@ -6,7 +6,7 @@ export const menuItems: MenuItemType[] = [
     label: 'Dashboards',
     icon: '/assets/icons/sprite.svg#trello',
     isCollapsed:true,
-    badge: { variant: 'danger', text: 'New' },
+    //badge: { variant: 'danger', text: 'New' },
     children: [
       {  label: 'Control Center', url: '/dashboards/control-center' },
       {label: 'Subscription & Billing', url: '/dashboards/subscription' },
